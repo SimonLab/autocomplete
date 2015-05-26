@@ -5,7 +5,7 @@ assert.equal(typeof ac, 'object');
 assert.equal(typeof ac.import, 'function');
 
 console.log('# ac.import inports a list of words');
-ac.import(function(words){
+ac.import(function(err, words){
   console.log("words.txt had " + words.length + "words in it");
   assert.equal(words.length, 99172);
 });
@@ -20,5 +20,18 @@ ac.import(function(){
     assert.equal(err, null);
     console.log(found);
     assert.equal(found.length, 5);
+  });
+});
+
+console.log('# ac.stats tracks which words.string were search for');
+ac.import(function(){
+  ac.stats('awesome', function(err, stats){
+    console.log(stats);
+    assert.equal(err, null);
+    assert.equal(stats['awesome'].length, 1);
+    ac.stats('awesome', function(err, stats){
+      console.log(stats);
+      assert.equal(stats['awesome'].length, 2);
+    });
   });
 });

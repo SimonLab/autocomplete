@@ -7,22 +7,33 @@ ac.import = function(callback){
   }
   var filename = __dirname + '/words.txt';
   fs.readFile(filename, 'utf8', function(err, data){
-    if(err){
-      console.log(err);
-    }
     ac.words = data.split('\n');
-    return callback(ac.words);
+    return callback(err, ac.words);
   });
+};
+
+ac.stats = function(word, callback){
+  if(!ac.searches){
+    ac.searches = {};
+  }
+
+  if(!ac.searches[word]){
+    ac.searches[word] = [];
+  }
+  ac.searches[word].push(new Date().getTime());
+  callback(null, ac.searches);
 };
 
 ac.findWord = function(word, callback){
   var found = [];
   // found = ac.words[ac.words.indexOf(word)];
   for(var i = 0; i < ac.words.length; i++){
-    if(ac.words[i].search(word) == 0){
+    if(ac.words[i].search(word) === 0){
       found.push(ac.words[i]);
     }
   }
   return callback(null, found);
 };
+
+
 module.exports = ac;
